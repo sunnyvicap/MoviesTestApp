@@ -15,9 +15,38 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/moviePosterIMG"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/poster_height"/>
+            android:layout_height="@dimen/poster_height"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/movieTittle"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimen5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/moviePosterIMG"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/moviePopularity"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimen5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/moviePosterIMG"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/movieOverview"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_width="match_parent"
+            android:padding="@dimen/dimen5"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/movieTittle"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

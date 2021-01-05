@@ -48,6 +48,7 @@ class MainPresenter(application: Application) : BasePresenter<MainContarctor.Vie
 
                 getView().hideLoading()
 
+                getView().onMoviesSuccess(response.body()!!)
 
             }
 

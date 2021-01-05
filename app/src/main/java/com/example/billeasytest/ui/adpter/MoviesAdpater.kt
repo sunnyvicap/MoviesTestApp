@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.billeasytest.R
 import com.example.billeasytest.databinding.MoviesChildLytBinding
 import com.example.billeasytest.model.Result
+import com.example.billeasytest.util.AppConstants
+import com.squareup.picasso.Picasso
 
 class MoviesAdapter(  context : Context , moviesList : List<Result>) :
     RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
@@ -25,7 +27,14 @@ class MoviesAdapter(  context : Context , moviesList : List<Result>) :
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+        val result = moviesList[position]
+        holder.bind.movieTittle.text = result.title
+        holder.bind.movieOverview.text = result.overview
 
+        holder.bind.moviePopularity.text= result.voteAverage.toString() + " / 10"
+
+        val posterPath = AppConstants.BASE_IMG_URL + result.posterPath
+        Picasso.get().load(posterPath).into(holder.bind.moviePosterIMG)
 
     }
 

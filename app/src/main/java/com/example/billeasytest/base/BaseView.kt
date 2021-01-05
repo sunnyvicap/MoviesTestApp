@@ -6,5 +6,4 @@ interface BaseView {
 
     fun hideLoading()
 
-    fun isConnectedToInternet()
 }
