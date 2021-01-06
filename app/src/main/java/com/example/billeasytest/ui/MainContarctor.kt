@@ -8,7 +8,7 @@ interface MainContarctor {
 
     interface Presenter : BaseMvpPresenter<MainContarctor.View>{
 
-        fun loadMovies();
+        fun loadMovies(pagekey : Int);
     }
 
     interface View  : BaseView{

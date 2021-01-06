@@ -6,6 +6,7 @@ import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.example.billeasytest.R
 import com.example.billeasytest.base.BaseActivity
 import com.example.billeasytest.databinding.ActivityMainBinding
@@ -16,13 +17,15 @@ import org.jetbrains.annotations.NotNull
 
 class MainActivity :  BaseActivity<MainContarctor.Presenter>(), MainContarctor.View {
 
+    private var loadMore: Boolean= false
     private var binding : ActivityMainBinding ? =null
-    private var movieResult: List<Result> ?= null
+    private var movieResult = mutableListOf<Result>()
 
     private lateinit var adapter: MoviesAdapter
     private lateinit var mainPresenter: MainPresenter
 
-
+    private var currentPage = 1
+    private var totalPages : Int? = 0;
 
     override fun getLayoutBinding(): View {
 
@@ -48,17 +51,44 @@ class MainActivity :  BaseActivity<MainContarctor.Presenter>(), MainContarctor.V
         mainPresenter = MainPresenter(this.application)
         mainPresenter.attach(this)
 
-        movieResult = ArrayList<Result>()
-        mainPresenter.loadMovies()
+
+        mainPresenter.loadMovies(currentPage)
+
+        adapter = MoviesAdapter(this, movieResult)
+        binding?.movieRecycler?.adapter = adapter
+
+        binding?.movieRecycler?.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if (currentPage < totalPages!!) {
+                    currentPage++;
+
+                    loadMore = true;
+
+
+                    mainPresenter.loadMovies(currentPage)
+                }
+
+            }
+        })
     }
 
 
     override fun onMoviesSuccess(@NotNull moviesNowPlaying: MoviesNowPlaying) {
 
-        movieResult = moviesNowPlaying.results
-        adapter = MoviesAdapter(this, movieResult!!)
 
-        binding?.movieRecycler?.adapter = adapter
+        totalPages = moviesNowPlaying.totalPages
+        if(!loadMore) {
+
+            if(movieResult.isNotEmpty()){
+
+                movieResult.clear()
+            }
+        }
+
+        movieResult.addAll(moviesNowPlaying.results)
+       adapter.notifyDataSetChanged()
 
 
     }

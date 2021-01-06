@@ -2,6 +2,7 @@
 package com.example.billeasytest.model;
 
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -11,7 +12,8 @@ import java.util.List;
 @Entity(tableName = "movies")
 public class Result {
 
-    @SerializedName("original_language")
+    @PrimaryKey
+    @SerializedName("id")
     @Expose
     private Integer id;
 
@@ -28,9 +30,9 @@ public class Result {
     @Expose
     private List<Integer> genreIds = null;
 
-    @SerializedName("id")
-    @Expose
 
+    @SerializedName("original_language")
+    @Expose
     private String originalLanguage;
     @SerializedName("original_title")
     @Expose
