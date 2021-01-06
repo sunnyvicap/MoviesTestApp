@@ -1,13 +1,10 @@
 package com.example.billeasytest.ui
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.billeasytest.R
 import com.example.billeasytest.base.BaseActivity
 import com.example.billeasytest.databinding.ActivityMainBinding
 import com.example.billeasytest.db.MoviesDatabase
@@ -20,39 +17,38 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
 import org.jetbrains.annotations.NotNull
 
-class MainActivity :  BaseActivity<MainContarctor.Presenter>(), MainContarctor.View {
 
-    private var loadMore: Boolean= false
-    private var binding : ActivityMainBinding ? =null
+class MainActivity : BaseActivity<MainContarctor.Presenter>(), MainContarctor.View {
+
+    private var loadMore: Boolean = false
+    private var binding: ActivityMainBinding? = null
     private var movieResult = mutableListOf<Result>()
 
     private lateinit var adapter: MoviesAdapter
     private lateinit var mainPresenter: MainPresenter
 
     private var currentPage = 1
-    private var totalPages : Int? = 0;
-
-    private val coroutineScope :CoroutineScope = CoroutineScope(Dispatchers.IO)
+    private var totalPages: Int? = 0
+    var pastVisiblesItems = 0
+    var visibleItemCount: Int = 0
+    var totalItemCount: Int = 0
 
 
     override fun getLayoutBinding(): View {
 
-        binding =  ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         return binding!!.root;
     }
 
 
-
-
     override fun showLoading() {
-        binding?.progressBar?.visibility= View.VISIBLE
+        binding?.progressBar?.visibility = View.VISIBLE
     }
 
     override fun hideLoading() {
-        binding?.progressBar?.visibility= View.GONE
+        binding?.progressBar?.visibility = View.GONE
 
     }
-
 
 
     override fun init(savedInstanceState: Bundle?) {
@@ -60,16 +56,24 @@ class MainActivity :  BaseActivity<MainContarctor.Presenter>(), MainContarctor.V
         mainPresenter.attach(this)
 
 
-        mainPresenter.loadMovies(currentPage)
+        val mLayoutManager = LinearLayoutManager(this)
+        mLayoutManager.orientation = RecyclerView.VERTICAL
+
+        binding?.movieRecycler?.layoutManager = mLayoutManager
 
         adapter = MoviesAdapter(this, movieResult)
         binding?.movieRecycler?.adapter = adapter
 
-        binding?.movieRecycler?.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+
+        mainPresenter.loadMovies(currentPage)
+        mainPresenter.loadResultFromLocal()
+        binding?.movieRecycler?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (currentPage < totalPages!!) {
+
+                if(!loadMore)
+                  if (currentPage < totalPages!!) {
                     currentPage++;
 
                     loadMore = true;
@@ -77,26 +81,11 @@ class MainActivity :  BaseActivity<MainContarctor.Presenter>(), MainContarctor.V
 
                     mainPresenter.loadMovies(currentPage)
                 }
-
             }
+
+
         })
 
-       val db = MoviesDatabase.getInstance(this)
-        coroutineScope.async {
-            db.reposDao().getAllMovies().collect {
-
-                if(!loadMore) {
-
-                    if(movieResult.isNotEmpty()){
-
-                        movieResult.clear()
-                    }
-                }
-
-                movieResult.addAll(it)
-                adapter.notifyDataSetChanged()
-            }
-        }
 
     }
 
@@ -107,7 +96,20 @@ class MainActivity :  BaseActivity<MainContarctor.Presenter>(), MainContarctor.V
         totalPages = moviesNowPlaying.totalPages
 
 
+    }
 
+    override fun onMoviesFromLocal(result: List<Result>) {
+        if (!loadMore) {
+
+            if (movieResult.isNotEmpty()) {
+
+                movieResult.clear()
+            }
+
+        }
+
+        movieResult.addAll(result)
+        adapter.notifyDataSetChanged()
     }
 
     override fun onError(e: Throwable) {

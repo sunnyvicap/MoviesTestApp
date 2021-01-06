@@ -41,12 +41,20 @@
             app:layout_constraintTop_toBottomOf="@id/moviePosterIMG"/>
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/movieReleasing"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_width="match_parent"
+            android:padding="@dimen/dimen5"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/moviePopularity"/>
+
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/movieOverview"
             style="@style/TextAppearance.MaterialComponents.Caption"
             android:layout_width="match_parent"
             android:padding="@dimen/dimen5"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/movieTittle"/>
+            app:layout_constraintTop_toBottomOf="@id/movieReleasing"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

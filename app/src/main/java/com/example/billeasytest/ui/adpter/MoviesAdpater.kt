@@ -32,6 +32,9 @@ class MoviesAdapter(  context : Context , moviesList : List<Result>) :
         holder.bind.movieTittle.text = result.title
         holder.bind.movieOverview.text = result.overview
 
+        val releasingON = "Releasing On: ${result.releaseDate}"
+        holder.bind.movieReleasing.text = releasingON
+
         holder.bind.moviePopularity.text= result.voteAverage.toString() + " / 10"
 
         val posterPath = AppConstants.BASE_IMG_URL + result.posterPath

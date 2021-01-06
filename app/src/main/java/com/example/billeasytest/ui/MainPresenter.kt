@@ -16,6 +16,7 @@ import com.example.billeasytest.util.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
@@ -74,7 +75,18 @@ class MainPresenter(application: Application) : BasePresenter<MainContarctor.Vie
 
     }
 
-     suspend fun saveDataToLocal(body: MoviesNowPlaying) {
+    override fun loadResultFromLocal() {
+        coroutineScope.async {
+            db.reposDao().getAllMovies().collect {
+
+                getView().onMoviesFromLocal(it)
+
+            }
+        }
+
+    }
+
+    suspend fun saveDataToLocal(body: MoviesNowPlaying) {
          db.reposDao().insertMovies(body.results)
          Log.e("Data", "inserted")
     }
