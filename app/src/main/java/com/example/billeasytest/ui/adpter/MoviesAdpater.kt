@@ -9,6 +9,7 @@ import com.example.billeasytest.R
 import com.example.billeasytest.databinding.MoviesChildLytBinding
 import com.example.billeasytest.model.Result
 import com.example.billeasytest.util.AppConstants
+import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 
 class MoviesAdapter(  context : Context , moviesList : List<Result>) :
@@ -34,7 +35,11 @@ class MoviesAdapter(  context : Context , moviesList : List<Result>) :
         holder.bind.moviePopularity.text= result.voteAverage.toString() + " / 10"
 
         val posterPath = AppConstants.BASE_IMG_URL + result.posterPath
-        Picasso.get().load(posterPath).into(holder.bind.moviePosterIMG)
+
+        Picasso.get()
+            .load(posterPath)
+            .networkPolicy(NetworkPolicy.OFFLINE)
+            .into(holder.bind.moviePosterIMG);
 
     }
 

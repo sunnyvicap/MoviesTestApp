@@ -5,12 +5,16 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.billeasytest.model.Result
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovies(repo: List<Result>)
+
+    @Query("Select * from movies")
+     fun getAllMovies() :Flow<List<Result>>
 
     @Query("DELETE FROM movies")
     suspend fun clearRepos()

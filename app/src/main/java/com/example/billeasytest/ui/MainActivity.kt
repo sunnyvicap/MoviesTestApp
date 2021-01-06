@@ -10,9 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.billeasytest.R
 import com.example.billeasytest.base.BaseActivity
 import com.example.billeasytest.databinding.ActivityMainBinding
+import com.example.billeasytest.db.MoviesDatabase
 import com.example.billeasytest.model.MoviesNowPlaying
 import com.example.billeasytest.model.Result
 import com.example.billeasytest.ui.adpter.MoviesAdapter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.collect
 import org.jetbrains.annotations.NotNull
 
 class MainActivity :  BaseActivity<MainContarctor.Presenter>(), MainContarctor.View {
@@ -26,6 +31,9 @@ class MainActivity :  BaseActivity<MainContarctor.Presenter>(), MainContarctor.V
 
     private var currentPage = 1
     private var totalPages : Int? = 0;
+
+    private val coroutineScope :CoroutineScope = CoroutineScope(Dispatchers.IO)
+
 
     override fun getLayoutBinding(): View {
 
@@ -72,6 +80,24 @@ class MainActivity :  BaseActivity<MainContarctor.Presenter>(), MainContarctor.V
 
             }
         })
+
+       val db = MoviesDatabase.getInstance(this)
+        coroutineScope.async {
+            db.reposDao().getAllMovies().collect {
+
+                if(!loadMore) {
+
+                    if(movieResult.isNotEmpty()){
+
+                        movieResult.clear()
+                    }
+                }
+
+                movieResult.addAll(it)
+                adapter.notifyDataSetChanged()
+            }
+        }
+
     }
 
 
@@ -79,16 +105,7 @@ class MainActivity :  BaseActivity<MainContarctor.Presenter>(), MainContarctor.V
 
 
         totalPages = moviesNowPlaying.totalPages
-        if(!loadMore) {
 
-            if(movieResult.isNotEmpty()){
-
-                movieResult.clear()
-            }
-        }
-
-        movieResult.addAll(moviesNowPlaying.results)
-       adapter.notifyDataSetChanged()
 
 
     }

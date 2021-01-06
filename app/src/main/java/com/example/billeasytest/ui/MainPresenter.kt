@@ -29,6 +29,8 @@ class MainPresenter(application: Application) : BasePresenter<MainContarctor.Vie
     val coroutineScope :CoroutineScope = CoroutineScope(Dispatchers.IO)
 
 
+
+
     override fun loadMovies(pagekey : Int) {
 
         if(!NetworkUtils(context = application).isConnected()){
@@ -43,8 +45,6 @@ class MainPresenter(application: Application) : BasePresenter<MainContarctor.Vie
 
         val callApiClient : Call<MoviesNowPlaying> = ApiRequest.buildService(ApiInterface::class.java).getMoviesNowPlaying(map)
 
-        Log.d("url", callApiClient.request().url.toString())
-
 
         getView().showLoading()
 
@@ -54,7 +54,7 @@ class MainPresenter(application: Application) : BasePresenter<MainContarctor.Vie
 
                 getView().hideLoading()
 
-                getView().onMoviesSuccess(response.body()!!)
+              //  getView().onMoviesSuccess(response.body()!!)
 
                 coroutineScope.async {
 
