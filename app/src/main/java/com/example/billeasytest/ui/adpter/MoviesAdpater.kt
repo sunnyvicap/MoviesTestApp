@@ -41,6 +41,8 @@ class MoviesAdapter(  context : Context , moviesList : List<Result>) :
 
         Picasso.get()
             .load(posterPath)
+            .placeholder(R.drawable.please_wait)
+            .error(R.drawable.no_image_available)
             .networkPolicy(NetworkPolicy.OFFLINE)
             .into(holder.bind.moviePosterIMG);
 

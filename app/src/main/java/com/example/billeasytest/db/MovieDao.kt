@@ -13,7 +13,7 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovies(repo: List<Result>)
 
-    @Query("Select * from movies ORDER BY id DESC")
+    @Query("Select * from movies ORDER BY releaseDate DESC")
      fun getAllMovies() :Flow<List<Result>>
 
     @Query("DELETE FROM movies")
