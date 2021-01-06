@@ -1,53 +1,68 @@
 
 package com.example.billeasytest.model;
 
+import androidx.room.Entity;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-
+@Entity(tableName = "movies")
 public class Result {
+
+    @SerializedName("original_language")
+    @Expose
+    private Integer id;
+
 
     @SerializedName("adult")
     @Expose
     private Boolean adult;
+
     @SerializedName("backdrop_path")
     @Expose
     private String backdropPath;
+
     @SerializedName("genre_ids")
     @Expose
     private List<Integer> genreIds = null;
+
     @SerializedName("id")
     @Expose
-    private Integer id;
-    @SerializedName("original_language")
-    @Expose
+
     private String originalLanguage;
     @SerializedName("original_title")
     @Expose
     private String originalTitle;
+
     @SerializedName("overview")
     @Expose
     private String overview;
     @SerializedName("popularity")
     @Expose
     private Float popularity;
+
     @SerializedName("poster_path")
     @Expose
     private String posterPath;
+
     @SerializedName("release_date")
     @Expose
     private String releaseDate;
+
     @SerializedName("title")
     @Expose
     private String title;
+
     @SerializedName("video")
     @Expose
     private Boolean video;
+
     @SerializedName("vote_average")
     @Expose
     private Float voteAverage;
+
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;
